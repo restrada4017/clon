@@ -16,7 +16,6 @@ namespace AISC.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddTransient<IEstadisticaService, EstadisticaService>();
             services.AddTransient<IAdnService, AdnService>();
             return services;
         }

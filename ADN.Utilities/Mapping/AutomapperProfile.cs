@@ -15,7 +15,6 @@ namespace ADN.Utilities.Mapping
         public AutomapperProfile()
         {
             CreateMap<Adn, AdnDto>().ReverseMap();
-            CreateMap<Estadistica, EstadisticaDto>().ReverseMap();
         }
     }
 }

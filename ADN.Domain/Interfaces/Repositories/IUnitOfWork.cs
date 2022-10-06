@@ -5,7 +5,6 @@ namespace ADN.Domain.Interfaces.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        IEstadisticaRepository EstadisticaRepository { get; }
         IAdnRepository AdnRepository { get; }
 
         void SaveChanges();

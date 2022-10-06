@@ -15,5 +15,21 @@ namespace ADN.Data.Repositories
         public AdnRepository(DbADNContext context) : base(context)
         {
         }
+
+        public async Task<bool> InsertADN(string adn,bool isclon)
+        {
+            var objADN = await Task.FromResult(_entities.FirstOrDefault(x => x.Adn1 == adn));
+
+            if (objADN == null)
+            {
+                objADN = new Adn();
+                objADN.Adn1 = adn;
+                objADN.IsClon = isclon;
+                _entities.Add(objADN);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

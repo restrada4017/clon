@@ -18,34 +18,18 @@ namespace ADN.Data.Data
         }
 
         public virtual DbSet<Adn> Adns { get; set; }
-        public virtual DbSet<Estadistica> Estadisticas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Adn>(entity =>
             {
-                entity.ToTable("Adn");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.ToTable("ADN");
 
                 entity.Property(e => e.Adn1)
                     .IsRequired()
-                    .HasMaxLength(100)
+                    .HasMaxLength(1000)
                     .IsUnicode(false)
                     .HasColumnName("ADN");
-            });
-
-            modelBuilder.Entity<Estadistica>(entity =>
-            {
-                entity.ToTable("Estadistica");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Llave)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("LLave");
             });
 
             OnModelCreatingPartial(modelBuilder);

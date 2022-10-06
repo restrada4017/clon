@@ -11,13 +11,12 @@ namespace ADN.Data.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IAdnRepository _adnRepository;
-        private readonly IEstadisticaRepository _estadisticaRepository;
+     
         private readonly DbADNContext _context;
 
 
         public IAdnRepository AdnRepository => _adnRepository ?? new AdnRepository(_context);
-        public IEstadisticaRepository EstadisticaRepository => _estadisticaRepository ?? new EstadisticaRepository(_context);
-
+       
         public UnitOfWork(DbADNContext context)
         {
             _context = context;

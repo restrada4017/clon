@@ -4,13 +4,15 @@ using ADN.Utilities;
 using AISC.Application;
 using ADN.Data;
 using AISC.Utilities.Filters;
+using ADN.Domain.CustomEntities;
 
 var builder = WebApplication.CreateBuilder(args);
-
+ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddInfraestructure();
 builder.Services.AddApplication();
 builder.Services.AddPersistenceSQL();
+builder.Services.Configure<ConfigurationAdn>(configuration.GetSection("ConfigurationAdn"));
 
 //configuracion automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

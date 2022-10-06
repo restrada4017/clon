@@ -1,14 +1,15 @@
-﻿using ADN.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ADN.Domain.Interfaces.Services
+namespace ADN.Domain.Interfaces.Utilities
 {
-    public interface IAdnService : IService<Adn>
+    public interface IAdnAnalyses
     {
         Task<bool> IsClon(string[] matrix);
+
+        string StringMatrix(string[] matrix);
     }
 }

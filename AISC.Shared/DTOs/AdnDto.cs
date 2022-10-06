@@ -7,5 +7,6 @@ namespace ADN.Shared.DTOs
     {
         public int Id { get; set; }
         public string? Adn { get; set; }
+        public bool IsClon { get; set; }
     }
 }
