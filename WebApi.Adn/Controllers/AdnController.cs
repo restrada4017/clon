@@ -48,7 +48,7 @@ namespace WebApi.Adn.Controllers
         [HttpPost, Route("clon")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(IEnumerable<AdnDto>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> clon([FromBody] AdnRequest request)
+        public async Task<IActionResult> Clon([FromBody] AdnRequest request)
         {
             try
             {
@@ -61,6 +61,33 @@ namespace WebApi.Adn.Controllers
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, "No es un clon");
                 }
+            }
+            catch (Exception e)
+            {
+                throw new BusinessException(e.Message);
+            }
+        }
+
+        [HttpGet, Route("estadisticas")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(IEnumerable<AdnDto>))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Estadisticas()
+        {
+            try
+            {
+
+                ResponseStatistics response = new ResponseStatistics();
+
+                response.contador_clon_adn = 0;
+                response.contador_amigos_adn = 0;
+                response.promedio = 0;
+
+                var list = await _AdnService.GetAll();
+                response.contador_clon_adn = list.Count(x => x.IsClon);
+                response.contador_amigos_adn = list.Count(x => !x.IsClon);
+                response.promedio = response.contador_clon_adn / response.contador_amigos_adn == 0 ? 1 : response.contador_amigos_adn;
+
+                return Ok(response);
             }
             catch (Exception e)
             {
