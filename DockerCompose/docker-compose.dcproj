@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>33a80e4c-bf1f-4f43-82c4-7a703e8d1b1e</ProjectGuid>
+    <ProjectGuid>15cff305-2c9a-42f2-b2d2-f05c30cc34a0</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>webapi.adn</DockerServiceName>
@@ -14,6 +14,6 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="initscriptdb.sql" />
+    <None Include="scriptdb.sql" />
   </ItemGroup>
 </Project>

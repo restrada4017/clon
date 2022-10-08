@@ -25,10 +25,11 @@ namespace ADN.Data.Data
             {
                 entity.ToTable("ADN");
 
+                entity.Property(e => e.Id).UseIdentityAlwaysColumn();
+
                 entity.Property(e => e.Adn1)
                     .IsRequired()
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
                     .HasColumnName("ADN");
             });
 

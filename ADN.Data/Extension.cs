@@ -26,8 +26,7 @@ namespace ADN.Data
 
             // configuracion base de datos y manejo sql server Repositorio
             services.AddDbContext<DbADNContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DbADN")));
-
+                options.UseNpgsql(configuration.GetConnectionString("DbADN")));
 
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();

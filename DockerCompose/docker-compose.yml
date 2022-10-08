@@ -9,7 +9,7 @@ services:
       - "5433:5432"
     restart: always
     volumes:
-      - ./initscriptdb.sql:/docker-entrypoint-initdb.d/initscriptdb.sql
+      - ./scriptdb.sql:/docker-entrypoint-initdb.d/scriptdb.sql
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
