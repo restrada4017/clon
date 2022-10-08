@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  serverpostgresdb:
+    image: postgres:latest
+    expose:
+      - "5432"
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - ./scriptdb.sql:/docker-entrypoint-initdb.d/scriptdb.sql
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "DbADN"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: "rafael.estrada0@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "Colombia9."
+    ports:
+      - "81:80"
+    depends_on: 
+      - serverpostgresdb
+  redis:
+    image: redis:latest
+    container_name: RedisCache
+    restart: always
+    ports:
+      - '6380:6380'
+    environment:
+      - REDIS_PASSWORD=DRzltpW29hLrBBr1wpYS3LltGzqqtmXw2AzCaBnmfdg=
+  webapi.adn:
+    image: ${DOCKER_REGISTRY-}webapiadn
+    build:
+      context: .
+      dockerfile: WebApi.Adn/Dockerfile
+    depends_on: 
+      - serverpostgresdb

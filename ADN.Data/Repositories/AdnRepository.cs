@@ -1,6 +1,7 @@
 ﻿using ADN.Data.Data;
 using ADN.Domain.Entities;
 using ADN.Domain.Interfaces.Repositories;
+using ADN.Domain.Interfaces.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace ADN.Data.Repositories
 
     public class AdnRepository : BaseRepository<Adn>, IAdnRepository
     {
-        public AdnRepository(DbADNContext context) : base(context)
+      
+        public AdnRepository(DbADNContext context)  : base(context)
         {
+            
         }
 
-        public async Task<bool> InsertADN(string adn,bool isclon)
+        public async Task<Adn> InsertADN(string adn,bool isclon)
         {
             var objADN = await Task.FromResult(_entities.FirstOrDefault(x => x.Adn1 == adn));
 
@@ -26,10 +29,15 @@ namespace ADN.Data.Repositories
                 objADN.Adn1 = adn;
                 objADN.IsClon = isclon;
                 _entities.Add(objADN);
-                return true;
             }
 
-            return false;
+            return objADN;
+        }
+
+        public async Task<Adn> ValideADN(string adn)
+        {
+            var objADN = await Task.FromResult(_entities.FirstOrDefault(x => x.Adn1 == adn));
+            return objADN;
         }
     }
 }

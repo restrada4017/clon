@@ -9,6 +9,8 @@ namespace ADN.Domain.Interfaces.Repositories
 {
     public interface IAdnRepository : IRepository<Adn>
     {
-        Task<bool> InsertADN(string adn, bool isclon);
+        Task<Adn> InsertADN(string adn, bool isclon);
+
+        Task<Adn> ValideADN(string adn);
     }
 }

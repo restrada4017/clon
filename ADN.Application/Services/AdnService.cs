@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace ADN.Application.Services
 {
@@ -16,13 +17,13 @@ namespace ADN.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAdnAnalyses _AdnAnalyses;
-        private const string Contador_clon_adn = "contador_clon_adn";
-        private const string Contador_amigos_adn = "contador_amigos_adn";
+        private readonly ICache _cache;
 
-        public AdnService(IUnitOfWork unitOfWork, IAdnAnalyses adnAnalyses)
+        public AdnService(IUnitOfWork unitOfWork, IAdnAnalyses adnAnalyses, ICache cache)
         {
             _unitOfWork = unitOfWork;
             _AdnAnalyses = adnAnalyses;
+            _cache = cache;
         }
 
         public async Task Delete(int id)
@@ -52,11 +53,28 @@ namespace ADN.Application.Services
 
         public async Task<bool> IsClon(string[] matrix)
         {
-            bool resul = await _AdnAnalyses.IsClon(matrix);
+            
             string adn = _AdnAnalyses.StringMatrix(matrix);
-            await _unitOfWork.AdnRepository.InsertADN(adn, resul);
-            await _unitOfWork.SaveChangesAsync();
-            return resul;
+
+            string cacheAdn = adn;
+            string serializedAdn;
+            var redisAdn = await _cache.Get(cacheAdn);
+            if (redisAdn != null)
+            {
+                serializedAdn = Encoding.UTF8.GetString(redisAdn);
+                var objadn = JsonConvert.DeserializeObject<Adn>(serializedAdn);
+                return objadn.IsClon;
+            }
+            else
+            {
+                bool resul = await _AdnAnalyses.IsClon(matrix);
+                var objadn = await _unitOfWork.AdnRepository.InsertADN(adn, resul);
+                await _unitOfWork.SaveChangesAsync();
+                serializedAdn = JsonConvert.SerializeObject(objadn);
+                redisAdn = Encoding.UTF8.GetBytes(serializedAdn);
+                await _cache.Set(cacheAdn,redisAdn);
+                return resul;
+            }
         }
 
         public async Task<bool> Update(Adn obj)
