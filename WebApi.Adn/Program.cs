@@ -9,10 +9,14 @@ using ADN.Domain.CustomEntities;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
+
+builder.Services.Configure<ConfigurationAdn>(configuration.GetSection("ConfigurationAdn"));
+var keyVaultAdn = configuration.GetSection("KeyVaultAdn");
+builder.Services.Configure<KeyVaultAdn>(keyVaultAdn);
+
 builder.Services.AddInfraestructure();
 builder.Services.AddApplication();
 builder.Services.AddPersistenceSQL();
-builder.Services.Configure<ConfigurationAdn>(configuration.GetSection("ConfigurationAdn"));
 
 //configuracion automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

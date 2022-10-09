@@ -1,8 +1,10 @@
 ﻿
 using ADN.Data.Data;
 using ADN.Data.Repositories;
+using ADN.Domain.CustomEntities;
 using ADN.Domain.Entities;
 using ADN.Domain.Interfaces.Repositories;
+using ADN.Domain.Interfaces.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,16 +19,30 @@ namespace ADN.Data
         {
             //Add services to use in Persistence
             IConfiguration configuration;
-
+            IKeys keys;
 
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 configuration = serviceProvider.GetService<IConfiguration>();
+                keys = serviceProvider.GetService<IKeys>();
             }
+
+            string connectionString = string.Empty;
+
+            if (keys.IsUseKey())
+            {
+                connectionString = keys.GetValueByKey("DbADN").Result;
+            }
+            else
+            {
+                connectionString = configuration.GetConnectionString("DbADN");
+            }
+
 
             // configuracion base de datos y manejo sql server Repositorio
             services.AddDbContext<DbADNContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DbADN")));
+                options.UseNpgsql(connectionString));
+
 
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
