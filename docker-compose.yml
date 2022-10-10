@@ -18,7 +18,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     environment: 
-      PGADMIN_DEFAULT_EMAIL: "rafael.estrada0@gmail.com"
+      PGADMIN_DEFAULT_EMAIL: "Test@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "Colombia9."
     ports:
       - "81:80"
