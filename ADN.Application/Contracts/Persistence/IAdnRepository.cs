@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ADN.Domain.Interfaces.Repositories
+namespace ADN.Application.Contracts.Persistence
 {
     public interface IAdnRepository : IAsyncRepository<Adn>
     {

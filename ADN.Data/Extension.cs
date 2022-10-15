@@ -1,9 +1,9 @@
 ﻿
+using ADN.Application.Contracts.Persistence;
 using ADN.Data.Data;
 using ADN.Data.Repositories;
 using ADN.Domain.CustomEntities;
 using ADN.Domain.Entities;
-using ADN.Domain.Interfaces.Repositories;
 using ADN.Domain.Interfaces.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,8 +44,9 @@ namespace ADN.Data
                 options.UseNpgsql(connectionString));
 
 
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IAdnRepository, AdnRepository>();
 
             return services;
         }

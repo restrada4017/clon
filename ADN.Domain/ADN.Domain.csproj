@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\Repositories\IAdnRepository.cs" />
+    <Compile Remove="Interfaces\Repositories\IRepository.cs" />
+    <Compile Remove="Interfaces\Repositories\IUnitOfWork.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\Repositories\" />
     <Folder Include="QueryFilters\" />
   </ItemGroup>
 

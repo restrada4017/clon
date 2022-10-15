@@ -1,53 +1,108 @@
-﻿using ADN.Data.Data;
-using ADN.Domain.Entities;
-using ADN.Domain.Interfaces.Repositories;
+﻿using ADN.Application.Contracts.Persistence;
+using ADN.Data.Data;
+using ADN.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace ADN.Data.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseEntity
+    public class BaseRepository<T> : IAsyncRepository<T> where T : BaseEntity
     {
-        private readonly DbADNContext _context;
-
-        protected DbSet<T> _entities;
+        protected readonly DbADNContext _context;
 
         public BaseRepository(DbADNContext context)
         {
-            context.Database.SetCommandTimeout(0);
             _context = context;
-            _entities = context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            return _entities.AsEnumerable();
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetById(int id)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _entities.FindAsync(id);
+            return await _context.Set<T>().Where(predicate).ToListAsync();
         }
 
-        public async Task Add(T entity)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate = null,
+                                       Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+                                       string includeString = null,
+                                       bool disableTracking = true)
         {
-            
-            await _entities.AddAsync(entity);
+            IQueryable<T> query = _context.Set<T>();
+            if (disableTracking) query = query.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(includeString)) query = query.Include(includeString);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null)
+                return await orderBy(query).ToListAsync();
+
+
+            return await query.ToListAsync();
         }
 
-        public async Task Update(T entity)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate = null,
+                                     Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+                                     List<Expression<Func<T, object>>> includes = null,
+                                     bool disableTracking = true)
         {
-            _entities.Update(entity);
+
+            IQueryable<T> query = _context.Set<T>();
+            if (disableTracking) query = query.AsNoTracking();
+
+            if (includes != null) query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null)
+                return await orderBy(query).ToListAsync();
+
+
+            return await query.ToListAsync();
         }
 
-        public async Task Delete(int id)
+        public virtual async Task<T> GetByIdAsync(int id)
         {
-            T entity = await GetById(id);
-            _entities.Remove(entity);
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        public async Task<T> AddAsync(T entity)
+        {
+            _context.Set<T>().Add(entity);
+            return entity;
+        }
+
+        public async Task<T> UpdateAsync(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            return entity;
+        }
+
+        public async Task DeleteAsync(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
+
+        public void AddEntity(T entity)
+        {
+            _context.Set<T>().Add(entity);
+        }
+
+        public void UpdateEntity(T entity)
+        {
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public void DeleteEntity(T entity)
+        {
+            _context.Set<T>().Remove(entity);
         }
     }
+
+
 }

@@ -5,6 +5,7 @@ using AISC.Application;
 using ADN.Data;
 using AISC.Utilities.Filters;
 using ADN.Domain.CustomEntities;
+using WebApi.Adn.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -40,6 +41,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
